@@ -5,18 +5,18 @@
 
 ---
 
-## 📥 Descargas Directas (Releases)
+## 📥 Descargas Directas (Instaladores Listos para Usar)
 
-Puedes descargar los instaladores y ejecutables oficiales directamente desde la sección de [**GitHub Releases**](https://github.com/peledahe/MD-Wysiwyg/releases):
+Descarga directamente los ejecutables e instaladores de la última versión:
 
-| Plataforma | Tipo de Paquete | Descarga Oficial |
+| Plataforma | Tipo de Paquete | Descarga Directa en GitHub |
 | :--- | :--- | :--- |
-| **🐧 Linux (Universal)** | AppImage Portable | [📦 `MD-Wysiwyg-1.0.0.AppImage`](https://github.com/peledahe/MD-Wysiwyg/releases/latest) |
-| **🐧 Linux (Debian/Ubuntu)** | Paquete `.deb` | [📦 `md-wysiwyg_1.0.0_amd64.deb`](https://github.com/peledahe/MD-Wysiwyg/releases/latest) |
-| **🪟 Windows (x64)** | Paquete Portable ZIP | [📦 `MD-Wysiwyg-1.0.0-win.zip`](https://github.com/peledahe/MD-Wysiwyg/releases/latest) |
+| **🐧 Linux (Universal)** | AppImage Portable | [📦 `MD Wysiwyg-1.0.0.AppImage`](https://github.com/peledahe/MD-Wysiwyg/raw/main/dist/MD%20Wysiwyg-1.0.0.AppImage) |
+| **🐧 Linux (Debian/Ubuntu)** | Paquete `.deb` | [📦 `md-wysiwyg_1.0.0_amd64.deb`](https://github.com/peledahe/MD-Wysiwyg/raw/main/dist/md-wysiwyg_1.0.0_amd64.deb) |
+| **🪟 Windows (x64)** | Paquete Portable ZIP | [📦 `MD Wysiwyg-1.0.0-win.zip`](https://github.com/peledahe/MD-Wysiwyg/raw/main/dist/MD%20Wysiwyg-1.0.0-win.zip) |
 
 > **Nota para Linux AppImage:** Otorga permisos de ejecución antes de abrirlo:  
-> `chmod +x "MD-Wysiwyg-1.0.0.AppImage"`
+> `chmod +x "MD Wysiwyg-1.0.0.AppImage"`
 
 ---
 

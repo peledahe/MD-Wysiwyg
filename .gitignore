@@ -2,14 +2,13 @@
 node_modules/
 package-lock.json
 
-# Binarios y carpetas de compilación
-dist/
+# Carpetas intermedias y temporales de compilación
+dist/linux-unpacked/
+dist/win-unpacked/
+dist/__appImage*
+dist/builder-*.yml
+dist/builder-*.yaml
 build/
-*.AppImage
-*.deb
-*.zip
-*.exe
-*.tar.gz
 
 # Archivos de depuración y logs
 npm-debug.log*
