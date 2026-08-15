@@ -1,0 +1,12 @@
+version: 1.0.0
+files:
+  - url: MD-Wysiwyg-1.0.0.AppImage
+    sha512: CsIZp8YwM8Z5Qnw8lsyuoekFfqYa/o0zD/vgaWf2lg6bAmJsrmhvYWGIOgsoOdeYqQsfky4/5p8B3X2E+ora8A==
+    size: 171753394
+    blockMapSize: 180166
+  - url: md-wysiwyg_1.0.0_amd64.deb
+    sha512: 8a9qbopeWFuFd41TVmnAv53rIoK7ElPe2yOkIHUHAOQG6k7t8C7JHLLjWJ6Bbu3qH32rJSTxYqdVBdyq/uLrxA==
+    size: 105735228
+path: MD-Wysiwyg-1.0.0.AppImage
+sha512: CsIZp8YwM8Z5Qnw8lsyuoekFfqYa/o0zD/vgaWf2lg6bAmJsrmhvYWGIOgsoOdeYqQsfky4/5p8B3X2E+ora8A==
+releaseDate: '2026-08-15T16:09:10.265Z'
