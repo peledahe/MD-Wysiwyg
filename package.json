@@ -3,7 +3,14 @@
   "productName": "MD Wysiwyg",
   "version": "1.0.0",
   "description": "Editor y Visor WYSIWYG profesional de Markdown y visor PDF desarrollado por Merke Software",
-  "homepage": "https://merke.net",
+  "homepage": "https://github.com/peledahe/MD-Wysiwyg#readme",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peledahe/MD-Wysiwyg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/peledahe/MD-Wysiwyg/issues"
+  },
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -16,6 +23,7 @@
     "viewer",
     "editor",
     "wysiwyg",
+    "pdf",
     "merke-software",
     "electron"
   ],
@@ -43,6 +51,13 @@
     "appId": "net.merke.mdwysiwyg",
     "productName": "MD Wysiwyg",
     "copyright": "Copyright © 2026 Merke Software - Perry Daniels",
+    "publish": [
+      {
+        "provider": "github",
+        "owner": "peledahe",
+        "repo": "MD-Wysiwyg"
+      }
+    ],
     "linux": {
       "target": [
         "AppImage",
@@ -52,16 +67,32 @@
       "packageCategory": "editors",
       "synopsis": "Editor y Visor WYSIWYG de Markdown",
       "description": "MD Wysiwyg - Editor visual y visor de Markdown desarrollado por Merke Software",
-      "icon": "assets/icon.png"
+      "icon": "assets/icons",
+      "desktop": {
+        "Name": "MD Wysiwyg",
+        "Comment": "Editor y Visor WYSIWYG de Markdown",
+        "Keywords": "markdown;editor;wysiwyg;pdf;viewer;text;"
+      }
+    },
+    "deb": {
+      "priority": "optional",
+      "packageCategory": "editors",
+      "depends": [
+        "gconf2",
+        "gconf-service",
+        "libnotify4",
+        "libappindicator1",
+        "libxtst6",
+        "libnss3"
+      ]
     },
     "win": {
       "target": [
-        "nsis",
-        "portable"
+        "zip"
       ],
       "publisherName": "Merke Software",
       "legalTrademarks": "Merke Software",
-      "icon": "assets/icon.png"
+      "icon": "assets/icon.ico"
     },
     "files": [
       "main.js",
