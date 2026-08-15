@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="obsidian">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MD Wysiwyg</title>
+  <!-- KaTeX CSS -->
+  <link rel="stylesheet" href="../node_modules/katex/dist/katex.min.css">
+  <!-- Highlight.js CSS -->
+  <link rel="stylesheet" href="../node_modules/highlight.js/styles/github-dark.css" id="hljs-theme">
+  <!-- Custom UI Styles -->
+  <link rel="stylesheet" href="styles.css">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Integrated App Menu Header & Toolbar -->
+  <header class="app-header">
+    <div class="header-left">
+      <!-- App Logo -->
+      <div class="logo-badge" title="MD Wysiwyg - Merke Software">MD</div>
+
+      <!-- Integrated Menu Bar (Archivo, Edición, Ver, Tema, Ayuda) -->
+      <nav class="app-menu-bar">
+        <!-- Menu Archivo -->
+        <div class="menu-dropdown">
+          <button class="menu-btn" id="menu-btn-archivo">Archivo</button>
+          <div class="dropdown-content hidden" id="dropdown-archivo">
+            <button id="menu-item-new"><span>Nuevo Documento</span><span class="shortcut">Ctrl+N</span></button>
+            <button id="menu-item-open"><span>Abrir Archivo...</span><span class="shortcut">Ctrl+O</span></button>
+            <div class="menu-divider"></div>
+            <button id="menu-item-save"><span>Guardar</span><span class="shortcut">Ctrl+S</span></button>
+            <button id="menu-item-save-as"><span>Guardar Como...</span><span class="shortcut">Ctrl+Shift+S</span></button>
+            <div class="menu-divider"></div>
+            <button id="menu-item-export-pdf"><span>Exportar a PDF</span></button>
+            <button id="menu-item-export-html"><span>Exportar a HTML</span></button>
+          </div>
+        </div>
+
+        <!-- Menu Edición -->
+        <div class="menu-dropdown">
+          <button class="menu-btn" id="menu-btn-edicion">Edición</button>
+          <div class="dropdown-content hidden" id="dropdown-edicion">
+            <button id="menu-item-search"><span>Buscar en documento</span><span class="shortcut">Ctrl+F</span></button>
+            <div class="menu-divider"></div>
+            <button id="menu-item-clear-history"><span>Limpiar Historial Reciente</span></button>
+          </div>
+        </div>
+
+        <!-- Menu Ver -->
+        <div class="menu-dropdown">
+          <button class="menu-btn" id="menu-btn-ver">Ver</button>
+          <div class="dropdown-content hidden" id="dropdown-ver">
+            <button id="menu-item-view-split"><span>Modo Dividido (Split)</span></button>
+            <button id="menu-item-view-preview"><span>Solo Previsualización</span></button>
+            <button id="menu-item-view-editor"><span>Solo Editor</span></button>
+            <div class="menu-divider"></div>
+            <button id="menu-item-toggle-wrap"><span>Ajuste de Línea (Wrap)</span></button>
+          </div>
+        </div>
+
+        <!-- Menu Tema -->
+        <div class="menu-dropdown">
+          <button class="menu-btn" id="menu-btn-tema">Tema</button>
+          <div class="dropdown-content hidden" id="dropdown-tema">
+            <button id="theme-opt-obsidian"><span>Dark Obsidian</span></button>
+            <button id="theme-opt-light"><span>Clean Light</span></button>
+            <button id="theme-opt-forest"><span>Emerald Forest</span></button>
+            <button id="theme-opt-cyberpunk"><span>Cyberpunk</span></button>
+          </div>
+        </div>
+
+        <!-- Menu Ayuda -->
+        <div class="menu-dropdown">
+          <button class="menu-btn" id="menu-btn-ayuda">Ayuda</button>
+          <div class="dropdown-content hidden" id="dropdown-ayuda">
+            <button id="menu-item-help"><span>Guía de Uso y Opciones</span><span class="shortcut">F1</span></button>
+            <div class="menu-divider"></div>
+            <button id="menu-item-about"><span>Acerca de MD Wysiwyg</span></button>
+          </div>
+        </div>
+      </nav>
+    </div>
+
+    <!-- Center Section: Active Document Name -->
+    <div class="header-center">
+      <span id="current-filename">Sin título.md</span>
+      <span id="unsaved-badge" class="badge-unsaved hidden" title="Cambios no guardados">• Modificado</span>
+    </div>
+
+    <!-- Right Section: Quick Action Buttons, Search & Window Controls -->
+    <div class="header-right">
+      <!-- Quick Action Buttons -->
+      <div class="btn-group">
+        <button id="btn-new" class="btn btn-secondary" title="Nuevo Documento (Ctrl+N)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Nuevo</span>
+        </button>
+        <button id="btn-open" class="btn btn-secondary" title="Abrir Archivo (Ctrl+O)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          <span>Abrir</span>
+        </button>
+        <button id="btn-save" class="btn btn-primary" title="Guardar Archivo (Ctrl+S)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+          <span>Guardar</span>
+        </button>
+      </div>
+
+      <!-- Live Dual Search Engine Controls -->
+      <div class="search-box">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="search-input" placeholder="Buscar texto (Ctrl+F)...">
+        <button id="btn-search-clear" class="icon-btn-xs hidden" title="Limpiar criterio de búsqueda">&times;</button>
+        <span id="search-count" class="search-count hidden">0/0</span>
+        <button id="btn-search-prev" class="icon-btn-xs" title="Anterior coincidencia (Shift+Enter)">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="18 15 12 9 6 15"/></svg>
+        </button>
+        <button id="btn-search-next" class="icon-btn-xs" title="Siguiente coincidencia (Enter)">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      <!-- Custom Window Controls -->
+      <div class="window-controls">
+        <button id="win-minimize" class="win-btn win-minimize" title="Minimizar">
+          <svg width="10" height="1" viewBox="0 0 10 1"><rect width="10" height="1" fill="currentColor"/></svg>
+        </button>
+        <button id="win-maximize" class="win-btn win-maximize" title="Maximizar / Restaurar">
+          <svg width="10" height="10" viewBox="0 0 10 10"><rect width="9" height="9" x="0.5" y="0.5" fill="none" stroke="currentColor" stroke-width="1"/></svg>
+        </button>
+        <button id="win-close" class="win-btn win-close" title="Cerrar">
+          <svg width="10" height="10" viewBox="0 0 10 10"><path d="M1,1 L9,9 M9,1 L1,9" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Workspace Layout -->
+  <div class="app-body">
+    <!-- Sidebar Trigger (When collapsed) -->
+    <button id="btn-open-sidebar" class="sidebar-trigger hidden" title="Mostrar Panel Lateral">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+
+    <!-- Collapsible Sidebar (TOC & Recent Files) -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-tabs">
+          <button class="sidebar-tab active" id="tab-toc">Índice TOC</button>
+          <button class="sidebar-tab" id="tab-recent">Recientes</button>
+        </div>
+        <button id="btn-toggle-sidebar" class="icon-btn-sm" title="Ocultar Panel Lateral">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
+        </button>
+      </div>
+      <div class="sidebar-content">
+        <!-- Tab 1: Table of Contents -->
+        <div class="tab-pane active" id="pane-toc">
+          <div id="toc-container" class="toc-list">
+            <p class="empty-state">Generando índice de contenidos...</p>
+          </div>
+        </div>
+
+        <!-- Tab 2: Recent Files -->
+        <div class="tab-pane" id="pane-recent">
+          <div id="recent-files-list" class="recent-list">
+            <p class="empty-state">Sin archivos recientes</p>
+          </div>
+          <button id="btn-clear-recent" class="btn btn-secondary btn-sm" style="margin-top: 12px; width: 100%;">Limpiar Historial</button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Editor & Preview Workspace -->
+    <main class="workspace mode-preview" id="workspace-container">
+      <!-- Left Pane: Raw Text Editor -->
+      <div class="workspace-pane pane-editor" id="pane-editor-wrap">
+        <div class="editor-header">
+          <div class="editor-header-title">
+            <span>Editor de Texto Fuente</span>
+          </div>
+
+          <!-- Toolbar de Edición de Formato Markdown (Red Box 1) -->
+          <div class="editor-toolbar" id="editor-toolbar">
+            <button type="button" class="tb-btn" id="tb-bold" title="Negrita (**texto**)">
+              <strong>B</strong>
+            </button>
+            <button type="button" class="tb-btn" id="tb-italic" title="Cursiva (*texto*)">
+              <em>I</em>
+            </button>
+            <button type="button" class="tb-btn" id="tb-heading" title="Encabezado (### Título)">
+              H
+            </button>
+            <button type="button" class="tb-btn" id="tb-strikethrough" title="Tachado (~~texto~~)">
+              <s>S</s>
+            </button>
+            <span class="tb-divider"></span>
+            <button type="button" class="tb-btn" id="tb-ul" title="Lista de viñetas (- Item)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="tb-ol" title="Lista numerada (1. Item)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="tb-quote" title="Cita (> texto)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 5.5-4 6z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 5.5-4 6z"/></svg>
+            </button>
+            <span class="tb-divider"></span>
+            <button type="button" class="tb-btn" id="tb-code" title="Código en línea (`código`)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="tb-codeblock" title="Bloque de código (```js)">
+              <span style="font-family: var(--font-mono); font-size: 11px; font-weight: bold;">{}</span>
+            </button>
+            <button type="button" class="tb-btn" id="tb-link" title="Insertar Enlace ([texto](url))">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="tb-image" title="Insertar Imagen (![alt](url))">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="tb-table" title="Insertar Tabla">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="tb-mermaid" title="Insertar Diagrama Mermaid">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="8.5" y1="7.5" x2="10" y2="16"/><line x1="15.5" y1="7.5" x2="14" y2="16"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="tb-math" title="Fórmula Matemática KaTeX ($...$)">
+              <span style="font-family: serif; font-size: 12px; font-weight: bold; font-style: italic;">fx</span>
+            </button>
+            <button type="button" class="tb-btn" id="tb-hr" title="Línea Horizontal (---)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/></svg>
+            </button>
+          </div>
+
+          <!-- Controles Derechos: Ajuste de línea y Botones de vista (Red Box 2) -->
+          <div class="editor-header-controls">
+            <button id="btn-word-wrap" class="icon-btn-sm active" title="Alternar Ajuste de Línea (Word Wrap)">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 6 20 6 20 12 7 12"/><polyline points="10 9 7 12 10 15"/></svg>
+            </button>
+            <div class="view-mode-toggle">
+              <button class="toggle-btn mode-btn-split" title="Modo Dividido (Split)">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+              </button>
+              <button class="toggle-btn active mode-btn-preview" title="Solo Previsualización">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+              </button>
+              <button class="toggle-btn mode-btn-editor" title="Solo Editor">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="editor-wrapper">
+          <div class="line-numbers" id="line-numbers">1</div>
+          <textarea id="markdown-input" class="wrap-active" spellcheck="false" placeholder="Escribe tu contenido Markdown aquí..."></textarea>
+        </div>
+        <div class="editor-footer">
+          <span id="stat-lines">0 líneas</span>
+          <span id="stat-words">0 palabras</span>
+          <span id="stat-chars">0 caracteres</span>
+          <span class="encoding-tag">UTF-8</span>
+        </div>
+      </div>
+
+      <!-- Resizer Split Divider -->
+      <div class="pane-resizer" id="pane-resizer"></div>
+
+      <!-- Right Pane: Rendered WYSIWYG Visualizer & Editor -->
+      <div class="workspace-pane pane-preview" id="pane-preview-wrap">
+        <div class="preview-header">
+          <div class="preview-header-title">
+            <span>Visualizador Editor WYSIWYG</span>
+          </div>
+
+          <!-- Toolbar Editor Visual WYSIWYG -->
+          <div class="wysiwyg-toolbar" id="wysiwyg-toolbar">
+            <button type="button" class="tb-btn" id="wy-bold" title="Negrita (Ctrl+B)">
+              <strong>B</strong>
+            </button>
+            <button type="button" class="tb-btn" id="wy-italic" title="Cursiva (Ctrl+I)">
+              <em>I</em>
+            </button>
+            <button type="button" class="tb-btn" id="wy-h1" title="Título H1">
+              H1
+            </button>
+            <button type="button" class="tb-btn" id="wy-h2" title="Título H2">
+              H2
+            </button>
+            <button type="button" class="tb-btn" id="wy-h3" title="Título H3">
+              H3
+            </button>
+            <button type="button" class="tb-btn" id="wy-strike" title="Tachado">
+              <s>S</s>
+            </button>
+            <span class="tb-divider"></span>
+            <button type="button" class="tb-btn" id="wy-ul" title="Lista de viñetas">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="wy-ol" title="Lista numerada">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4"/><path d="M4 10h2"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="wy-quote" title="Cita">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 5.5-4 6z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 2v6c0 1.25.75 2 2 2h3c0 4-2 5.5-4 6z"/></svg>
+            </button>
+            <span class="tb-divider"></span>
+            <button type="button" class="tb-btn" id="wy-link" title="Insertar Enlace">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="wy-table" title="Insertar Tabla">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="wy-mermaid" title="Insertar Diagrama Mermaid">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="8.5" y1="7.5" x2="10" y2="16"/><line x1="15.5" y1="7.5" x2="14" y2="16"/></svg>
+            </button>
+            <button type="button" class="tb-btn" id="wy-clear" title="Limpiar Formato">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+
+          <div class="view-mode-toggle">
+            <button class="toggle-btn mode-btn-split" title="Modo Dividido (Split)">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="12" y1="3" x2="12" y2="21"/></svg>
+            </button>
+            <button class="toggle-btn active mode-btn-preview" title="Solo Previsualización">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+            </button>
+            <button class="toggle-btn mode-btn-editor" title="Solo Editor">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="markdown-preview" id="markdown-preview" contenteditable="true" spellcheck="false"></div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Sticky Toast Notification Container -->
+  <div class="sticky-toast-container" id="sticky-toast-container"></div>
+
+  <!-- Custom Confirmation Modal System -->
+  <div class="modal-backdrop hidden" id="confirm-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <svg class="modal-icon warning" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <h3 id="modal-title">¿Confirmar Acción?</h3>
+      </div>
+      <div class="modal-body">
+        <p id="modal-message">¿Estás seguro de que deseas realizar esta acción?</p>
+      </div>
+      <div class="modal-footer">
+        <button id="modal-btn-cancel" class="btn btn-secondary">Cancelar</button>
+        <button id="modal-btn-confirm" class="btn btn-danger">Confirmar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Table Configuration Modal -->
+  <div class="modal-backdrop hidden" id="table-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <svg class="modal-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+        <h3>Insertar Tabla Markdown</h3>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 12px; color: var(--text-muted);">Indica las dimensiones para generar la tabla:</p>
+        <div class="modal-form-grid">
+          <div class="form-group">
+            <label for="table-rows-input">Número de filas (líneas de datos):</label>
+            <input type="number" id="table-rows-input" min="1" max="100" value="3">
+          </div>
+          <div class="form-group">
+            <label for="table-cols-input">Número de columnas:</label>
+            <input type="number" id="table-cols-input" min="1" max="30" value="3">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="table-btn-cancel" class="btn btn-secondary">Cancelar</button>
+        <button id="table-btn-insert" class="btn btn-primary">Insertar Tabla</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Mermaid Diagram Generator Modal -->
+  <div class="modal-backdrop hidden" id="mermaid-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <svg class="modal-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="8.5" y1="7.5" x2="10" y2="16"/><line x1="15.5" y1="7.5" x2="14" y2="16"/></svg>
+        <h3>Insertar Diagrama Mermaid</h3>
+      </div>
+      <div class="modal-body">
+        <p style="font-size: 12px; color: var(--text-muted);">Selecciona la plantilla inicial para el diagrama:</p>
+        <div class="modal-form-grid">
+          <div class="form-group">
+            <label for="mermaid-type-select">Tipo de Diagrama:</label>
+            <select id="mermaid-type-select" class="form-select">
+              <option value="flowchart">Diagrama de Flujo (Flowchart)</option>
+              <option value="sequence">Diagrama de Secuencia</option>
+              <option value="gantt">Diagrama de Gantt</option>
+              <option value="class">Diagrama de Clases</option>
+              <option value="state">Diagrama de Estados</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="mermaid-btn-cancel" class="btn btn-secondary">Cancelar</button>
+        <button id="mermaid-btn-insert" class="btn btn-primary">Insertar Diagrama</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Link Configuration Modal -->
+  <div class="modal-backdrop hidden" id="link-modal">
+    <div class="modal-box">
+      <div class="modal-header">
+        <svg class="modal-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        <h3>Insertar Enlace Web</h3>
+      </div>
+      <div class="modal-body">
+        <div class="modal-form-grid">
+          <div class="form-group">
+            <label for="link-text-input">Texto del Enlace:</label>
+            <input type="text" id="link-text-input" placeholder="Ej. Mi Enlace Web" value="Mi Enlace">
+          </div>
+          <div class="form-group">
+            <label for="link-url-input">Dirección URL:</label>
+            <input type="text" id="link-url-input" placeholder="https://ejemplo.com" value="https://">
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="link-btn-cancel" class="btn btn-secondary">Cancelar</button>
+        <button id="link-btn-insert" class="btn btn-primary">Insertar Enlace</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom Help & Guide Modal -->
+  <div class="modal-backdrop hidden" id="help-modal">
+    <div class="modal-box modal-box-large">
+      <div class="modal-header">
+        <svg class="modal-icon" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <h3>Guía de Uso y Opciones del Sistema</h3>
+      </div>
+      <div class="modal-body modal-body-scrollable">
+        <div class="help-section">
+          <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/></svg> Modos de Visualización</h4>
+          <p>Alterna instantáneamente entre tres entornos de trabajo desde la barra de menú o barra de acciones:</p>
+          <ul class="help-list">
+            <li><strong>Modo Dividido (Split):</strong> Edición simultánea con editor de código fuente a la izquierda y visor WYSIWYG interactivo a la derecha, con scroll sincronizado en tiempo real.</li>
+            <li><strong>Solo Previsualización (WYSIWYG):</strong> Vista limpia y modo de edición visual interactiva en tiempo real sin necesidad de ver código Markdown crudo.</li>
+            <li><strong>Solo Editor:</strong> Espacio de trabajo enfocado exclusivamente en código Markdown fuente con resaltado y conteo de líneas.</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg> Edición Visual Interactiva (WYSIWYG)</h4>
+          <p>Aplica y remueve formatos directamente en el visor donde esté ubicado tu cursor:</p>
+          <ul class="help-list">
+            <li><strong>Negrita, Cursiva y Tachado:</strong> Aplica o quita estilos de tipografía sobre el texto seleccionado.</li>
+            <li><strong>Encabezados (H1, H2, H3) y Citas:</strong> Disponen de <em>toggle inteligente</em>: pulsar la opción una segunda vez revierte el bloque a párrafo normal.</li>
+            <li><strong>Listas:</strong> Inserta listas ordenadas numéricas o viñetas desordenadas.</li>
+            <li><strong>Inserción Contextual:</strong> Enlaces, tablas y diagramas se insertan exactamente en la posición del cursor guardada.</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><circle cx="12" cy="18" r="3"/><line x1="8.5" y1="7.5" x2="10" y2="16"/><line x1="15.5" y1="7.5" x2="14" y2="16"/></svg> Diagramas, Tablas y Matemáticas</h4>
+          <ul class="help-list">
+            <li><strong>Diagramas Mermaid:</strong> Generador de Flujo, Secuencia, Gantt, Clases y Estados con renderizado SVG vectorial interactivo.</li>
+            <li><strong>Tablas Markdown:</strong> Asistente interactivo para especificar dimensiones (filas y columnas) e insertar la estructura instantáneamente.</li>
+            <li><strong>Fórmulas KaTeX:</strong> Renderiza expresiones matemáticas tanto en línea <code>$e=mc^2$</code> como en bloque <code>$$\sum_{i=1}^n i$$</code>.</li>
+            <li><strong>Resaltado de Código:</strong> Bloques de código con sintaxis resaltada para múltiples lenguajes de programación.</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg> Importación y Conversión Inteligente de PDF a Markdown</h4>
+          <p>Convierte documentos PDF en archivos Markdown estructurados y editables mediante el motor integrado de <strong>PDF.js</strong>:</p>
+          <ul class="help-list">
+            <li><strong>Apertura Directa:</strong> Abre cualquier archivo <code>.pdf</code> desde <em>Archivo &gt; Abrir...</em> (<code>Ctrl + O</code>) o arrastrándolo a la aplicación.</li>
+            <li><strong>Jerarquía Tipográfica:</strong> Detección automática de encabezados (<code>#</code>, <code>##</code>, <code>###</code>) según la escala y tamaño relativo de fuente.</li>
+            <li><strong>Reconocimiento de Formato:</strong> Identifica textos en negrita, cursiva, bloques monoespaciados de código y pares clave: valor.</li>
+            <li><strong>Tablas y Listas:</strong> Convierte tablas alineadas en sintaxis GFM (<code>| col |</code>) y preserva viñetas y listas numeradas.</li>
+            <li><strong>Edición Inmediata:</strong> El contenido se carga al instante en el editor y visor WYSIWYG listo para guardar como <code>.md</code>.</li>
+          </ul>
+        </div>
+
+        <div class="help-section">
+          <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M6 12h.01M10 12h.01M14 12h.01M18 12h.01M6 16h.01M10 16h10"/></svg> Atajos de Teclado Principales</h4>
+          <div class="help-shortcuts-grid">
+            <div class="shortcut-item"><span class="shortcut-key">Ctrl + N</span><span class="shortcut-desc">Nuevo documento</span></div>
+            <div class="shortcut-item"><span class="shortcut-key">Ctrl + O</span><span class="shortcut-desc">Abrir archivo Markdown o PDF</span></div>
+            <div class="shortcut-item"><span class="shortcut-key">Ctrl + S</span><span class="shortcut-desc">Guardar cambios</span></div>
+            <div class="shortcut-item"><span class="shortcut-key">Ctrl + Shift + S</span><span class="shortcut-desc">Guardar como nuevo archivo</span></div>
+            <div class="shortcut-item"><span class="shortcut-key">Ctrl + F</span><span class="shortcut-desc">Buscar en documento</span></div>
+            <div class="shortcut-item"><span class="shortcut-key">F1</span><span class="shortcut-desc">Abrir esta ventana de Ayuda</span></div>
+          </div>
+        </div>
+
+        <div class="help-section">
+          <h4><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportación y Visor PDF</h4>
+          <p>Exporta tu trabajo con un clic a <strong>PDF vectorizado</strong> de alta calidad o a <strong>Página Web HTML</strong> independiente. Además, puedes importar cualquier PDF para convertirlo y editarlo como Markdown.</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="help-btn-close" class="btn btn-primary">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Custom About Modal -->
+  <div class="modal-backdrop hidden" id="about-modal">
+    <div class="modal-box modal-box-about">
+      <div class="about-header-hero">
+        <div class="about-logo-badge">MD</div>
+        <div class="about-title-group">
+          <h3>MD Wysiwyg</h3>
+          <span class="about-version-badge">Versión 1.0.0</span>
+        </div>
+      </div>
+      <div class="modal-body">
+        <p class="about-tagline">
+          Suite moderna y profesional para la visualización, edición bidireccional interactiva (WYSIWYG), importación de PDFs estructurados y exportación de documentos.
+        </p>
+
+        <div class="about-info-card">
+          <div class="about-info-row">
+            <span class="about-info-label">Desarrollado por:</span>
+            <span class="about-info-value"><strong>Merke Software</strong></span>
+          </div>
+          <div class="about-info-row">
+            <span class="about-info-label">Autor:</span>
+            <span class="about-info-value"><strong>Perry Daniels</strong></span>
+          </div>
+          <div class="about-info-row">
+            <span class="about-info-label">Sitio Web:</span>
+            <span class="about-info-value">
+              <a href="#" id="about-url-link" class="about-link" title="Abrir sitio web oficial">merke.net</a>
+            </span>
+          </div>
+          <div class="about-info-row">
+            <span class="about-info-label">Motor PDF:</span>
+            <span class="about-info-value">PDF.js (Mozilla) + Conversor Estructurado</span>
+          </div>
+          <div class="about-info-row">
+            <span class="about-info-label">Licencia:</span>
+            <span class="about-info-value">MIT License (Uso Libre y Comercial)</span>
+          </div>
+        </div>
+
+        <div class="about-description-box">
+          <p>
+            <strong>MD Wysiwyg</strong> está diseñado para brindar máxima productividad tanto a desarrolladores como a redactores de contenido técnico y académico. Integra edición visual en tiempo real, conversión inteligente de <strong>PDF a Markdown</strong> preservando jerarquías y tablas, renderizado KaTeX, diagramas Mermaid interactivos y exportación profesional a PDF y HTML.
+          </p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="about-btn-close" class="btn btn-primary">Cerrar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- External Renderer Dependencies -->
+  <script src="../node_modules/marked/marked.min.js"></script>
+  <script src="../node_modules/turndown/dist/turndown.js"></script>
+  <script src="../node_modules/highlight.js/lib/index.js"></script>
+  <script src="../node_modules/katex/dist/katex.min.js"></script>
+  <script src="../node_modules/mermaid/dist/mermaid.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

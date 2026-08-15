@@ -1,0 +1,33 @@
+# Dependencias de Node
+node_modules/
+package-lock.json
+
+# Binarios y carpetas de compilación
+dist/
+build/
+*.AppImage
+*.deb
+*.zip
+*.exe
+*.tar.gz
+
+# Archivos de depuración y logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+# Archivos de entorno y configuración local
+.env
+.env.local
+.DS_Store
+Thumbs.db
+
+# Directorios de editores e IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Temporales de Electron / Chromium
+.cache/
