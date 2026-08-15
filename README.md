@@ -12,11 +12,25 @@ Descarga directamente los ejecutables e instaladores de la última versión:
 | Plataforma | Tipo de Paquete | Descarga Directa en GitHub |
 | :--- | :--- | :--- |
 | **🐧 Linux (Universal)** | AppImage Portable | [📦 `MD Wysiwyg-1.0.0.AppImage`](https://github.com/peledahe/MD-Wysiwyg/raw/main/dist/MD%20Wysiwyg-1.0.0.AppImage) |
-| **🐧 Linux (Debian/Ubuntu)** | Paquete `.deb` | [📦 `md-wysiwyg_1.0.0_amd64.deb`](https://github.com/peledahe/MD-Wysiwyg/raw/main/dist/md-wysiwyg_1.0.0_amd64.deb) |
+| **🐧 Linux (Debian/Ubuntu)** | Paquete Instalador `.deb` | [📦 `md-wysiwyg_1.0.0_amd64.deb`](https://github.com/peledahe/MD-Wysiwyg/raw/main/dist/md-wysiwyg_1.0.0_amd64.deb) |
 | **🪟 Windows (x64)** | Paquete Portable ZIP | [📦 `MD Wysiwyg-1.0.0-win.zip`](https://github.com/peledahe/MD-Wysiwyg/raw/main/dist/MD%20Wysiwyg-1.0.0-win.zip) |
 
-> **Nota para Linux AppImage:** Otorga permisos de ejecución antes de abrirlo:  
-> `chmod +x "MD Wysiwyg-1.0.0.AppImage"`
+### Instrucciones de Instalación y Ejecución
+
+- **Linux AppImage:**
+  ```bash
+  chmod +x "MD Wysiwyg-1.0.0.AppImage"
+  ./"MD Wysiwyg-1.0.0.AppImage"
+  ```
+- **Linux Debian / Ubuntu (`.deb`):**
+  ```bash
+  sudo dpkg -i md-wysiwyg_1.0.0_amd64.deb
+  # O bien hacer doble clic para abrir con la tienda / Centro de Software del sistema
+  ```
+- **Windows (x64):**
+  Descomprime `MD Wysiwyg-1.0.0-win.zip` y ejecuta `MD Wysiwyg.exe`.
+
+> 🔄 **Actualizaciones Automáticas:** El paquete incluye configuración de canal de publicación con GitHub Releases (`peledahe/MD-Wysiwyg`) para sincronización de futuras versiones.
 
 ---
 
