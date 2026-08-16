@@ -30,3 +30,8 @@ Thumbs.db
 
 # Temporales de Electron / Chromium
 .cache/
+
+# IA Context
+/.agents
+/.clinerules
+/deploy.sh
